@@ -1,4 +1,6 @@
 import os
+from PIL import Image, ExifTags
+import datetime
 
 def rename_files(target_folder, remove_n_chars, prefix : str, suffix : str, replace):
     """
@@ -27,5 +29,32 @@ def rename_files(target_folder, remove_n_chars, prefix : str, suffix : str, repl
             new_filename = new_filename + extension
             os.rename(os.path.join(target_folder, filename), os.path.join(target_folder, new_filename))
 
+def image_get_capture_datetime(image_path: str):
+    exif = Image.open(image_path)._getexif()
+    if exif is not None:
+        try:
+            return datetime.datetime.strptime(exif[36867], '%Y:%m:%d %H:%M:%S')
+        except:
+            pass
+    return None
+
+def rename_image_files(target_folder, prefix : str, suffix : str):
+    """
+    """
+    for filename in os.listdir(target_folder):
+        creation_time = image_get_capture_datetime(os.path.join(target_folder, filename))
+        if creation_time is not None:
+            extsep_index = os.path.basename(filename).rfind(os.path.extsep)
+            extension = os.path.basename(filename)[extsep_index:]
+            new_filename = creation_time.strftime("%Y%m%d_%H%M%S") #+ creation_time.strftime("%f")[:3]
+            if prefix is not None:
+                new_filename = prefix + new_filename
+            if suffix is not None:
+                new_filename = new_filename + suffix
+            new_filename = new_filename + extension
+            os.rename(os.path.join(target_folder, filename), os.path.join(target_folder, new_filename))
+
 if __name__ == "__main__":
-    rename_files('/Users/soerli/Downloads/Bill Willingham & Mark Buckingham', [0,7], None, None, None)
+    target_folder = '/Users/bla/Documents/Photos'
+    # rename_files(target_folder, None, None, '_Tessa', None)
+    rename_image_files(target_folder, None, None)
