@@ -31,7 +31,7 @@ def rename_files(target_folder, include_subfolders, remove_n_chars, prefix : str
                 for replace_tuple in replace:
                     new_filename = new_filename.replace(replace_tuple[0], replace_tuple[1])        
             if new_filename != filename.name:
-                os.rename(filename._str, os.path.join(filename.parent._str, new_filename))
+                os.rename(filename._str, os.path.join(str(filename.parent), new_filename))
 
 def image_get_capture_datetime(image_path: str):
     try:
@@ -67,6 +67,6 @@ def rename_image_files(target_folder, prefix : str, suffix : str, original_filen
             os.rename(os.path.join(target_folder, filename), os.path.join(target_folder, new_filename))
 
 if __name__ == "__main__":
-    target_folder = '/Users/soerli/AndroidStudioProjects/Topos/itsrox route scraper/val calanca/images_verified'
-    rename_files(target_folder, True, None, None, None, [['_1.webp','.webp']])
+    target_folder = '/Users/soerli/Pictures/2026 07 ClimbAID City Boulder Winti'
+    rename_files(target_folder, False, None, None, None, [['_Dimi_Dimi_Dimi','_Dimi']])
     #rename_image_files(target_folder, None, '_PXL', False)
